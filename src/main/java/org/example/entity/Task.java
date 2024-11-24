@@ -26,6 +26,9 @@ public class Task {
     @Column(nullable = false)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
