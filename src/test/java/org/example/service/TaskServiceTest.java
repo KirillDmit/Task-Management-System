@@ -50,7 +50,7 @@ class TaskServiceTest {
         when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        Task createdTask = taskService.createTask(userId, task);
+        Task createdTask = taskService.createTask(task, userId, 1L);
 
         // Assert
         assertNotNull(createdTask);
@@ -58,7 +58,7 @@ class TaskServiceTest {
         assertEquals("Test Description", createdTask.getDescription());
         assertEquals(user, createdTask.getUser());
 
-        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(2)).findById(userId);
         verify(taskRepository, times(1)).save(task);
     }
 
@@ -68,7 +68,7 @@ class TaskServiceTest {
         Task task = new Task();
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> taskService.createTask(userId, task));
+        assertThrows(UserNotFoundException.class, () -> taskService.createTask(task, userId, 1L));
         verify(userRepository, times(1)).findById(userId);
         verifyNoInteractions(taskRepository);
     }

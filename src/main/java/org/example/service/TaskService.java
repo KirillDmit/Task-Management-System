@@ -26,21 +26,35 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
-    public Task createTask(Long userId, Task task) {
+    public Task createTask(Task task, Long userId, Long assigneeId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
+
+        User assignee = userRepository.findById(assigneeId)
+                .orElseThrow(() -> new UserNotFoundException("Assignee not found with id " + assigneeId));
+
         task.setUser(user);
+        task.setAssignee(assignee);
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Long taskId, Task taskDetails) {
+    public Task addComment(Long taskId, String comment) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + taskId));
+        task.getComments().add(comment);
+        return taskRepository.save(task);
+    }
+
+    public Task updateTask(Long taskId, Task updatedTask) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + taskId));
 
-        task.setTitle(taskDetails.getTitle());
-        task.setDescription(taskDetails.getDescription());
-        task.setStatus(taskDetails.getStatus());
-        task.setPriority(taskDetails.getPriority());
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setStatus(updatedTask.getStatus());
+        task.setPriority(updatedTask.getPriority());
+        task.setAssignee(updatedTask.getAssignee());
+
         return taskRepository.save(task);
     }
 
@@ -64,11 +78,9 @@ public class TaskService {
     }
 
     public void deleteTask(Long taskId) {
-        if (taskRepository.existsById(taskId)) {
-            taskRepository.deleteById(taskId);
-        } else {
-            throw new TaskNotFoundException("Task not found with id " + taskId);
-        }
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + taskId));
+        taskRepository.delete(task);
     }
 }
 

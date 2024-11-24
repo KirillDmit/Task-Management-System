@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -32,6 +33,12 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    private User assignee;
+
+    @ElementCollection
+    private Set<String> comments;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
