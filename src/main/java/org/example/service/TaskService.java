@@ -82,5 +82,10 @@ public class TaskService {
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + taskId));
         taskRepository.delete(task);
     }
+
+    public boolean isUserAssignedToTask(Long taskId, String username) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        return task.getAssignee().getUsername().equals(username);
+    }
 }
 
