@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.entity.Priority;
 import org.example.entity.Task;
 import org.example.entity.User;
+import org.example.exception.TaskNotFoundException;
 import org.example.exception.UserNotFoundException;
 import org.example.repository.TaskRepository;
 import org.example.repository.UserRepository;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
