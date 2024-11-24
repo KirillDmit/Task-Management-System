@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -25,6 +27,16 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
         return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public Page<Task> getTasks(
+            @RequestParam(required = false) String authorEmail,
+            @RequestParam(required = false) String assigneeEmail,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return taskService.getTasks(authorEmail, assigneeEmail, page, size);
     }
 
     @GetMapping("/{taskId}")

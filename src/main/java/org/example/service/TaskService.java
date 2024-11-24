@@ -10,6 +10,8 @@ import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -71,6 +73,20 @@ public class TaskService {
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
+    }
+
+    public Page<Task> getTasks(String authorEmail, String assigneeEmail, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        if (authorEmail != null && assigneeEmail != null) {
+            return taskRepository.findByAuthorEmailAndAssigneeEmail(authorEmail, assigneeEmail, pageRequest);
+        } else if (authorEmail != null) {
+            return taskRepository.findByAuthorEmail(authorEmail, pageRequest);
+        } else if (assigneeEmail != null) {
+            return taskRepository.findByAssigneeEmail(assigneeEmail, pageRequest);
+        } else {
+            return taskRepository.findAll(pageRequest);
+        }
     }
 
     public List<Task> getTasksByPriority(Priority priority) {
