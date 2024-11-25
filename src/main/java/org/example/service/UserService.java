@@ -32,7 +32,7 @@ public class UserService {
             existingUser.setUsername(userDetails.getUsername());
             existingUser.setEmail(userDetails.getEmail());
             existingUser.setPassword(userDetails.getPassword());
-            existingUser.setRole(userDetails.getRole());
+            existingUser.setRoles(userDetails.getRoles());
             return userRepository.save(existingUser);
         }
         throw new UserNotFoundException("User not found with id " + id);
